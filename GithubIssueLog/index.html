@@ -28,14 +28,17 @@
 <script>
     var app = angular.module('githubApp', []);
     app.controller('githubIssuesController', function ($scope, $http) {
+        var numberOfDaysToSub = 7;
+        $scope.today = new Date();
         $scope.badData = false;
+        $scope.today.setDate($scope.today.getDate() - numberOfDaysToSub);
 
-            $http.get("https://api.github.com/repos/angular/angular.js/issues")
-                .then(function (response) {
-                    $scope.issues = response.data;
-                }, function (response) {
-                    $scope.badData = true;
-                });
+        $http.get("https://api.github.com/repos/angular/angular.js/issues?since=" + $scope.today)
+            .then(function (response) {
+                $scope.issues = response.data;
+            }, function (response) {
+                $scope.badData = true;
+            });
         });
 </script>
 </body>
