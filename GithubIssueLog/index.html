@@ -3,13 +3,13 @@
 <head>
     <link href="Content/github-issues-theme.css" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-    <title>Github API Demo</title>
+    <title>Github Issues API Demo</title>
 </head>
 <body>
     <div ng-app="githubApp" ng-controller="githubIssuesController">
         <table>
             <tr>
-                <th ng-click="orderByField='issues.title'; reverseSort = !reverseSort">Title</th>
+                <th>Title</th>
                 <th>Body</th>
                 <th>User Login</th>
                 <th>Assignee Login</th>
@@ -24,22 +24,56 @@
                 <td colspan="4">Unable to retrieve data, please try again.</td>
             </tr>
         </table>
+        <br/>
+        <button ng-click="prevPage()">Previous Page</button>
+        Page: {{page}}
+        <button ng-click="nextPage()">Next Page</button>
+        Go To Page: <input type="number" ng-model="newPageNumber" style="width: 50px;"/>
+        <button ng-click="newPage()">Go</button>
     </div>
+
 <script>
     var app = angular.module('githubApp', []);
-    app.controller('githubIssuesController', function ($scope, $http) {
+    app.controller('githubIssuesController', function ($scope, $http, $window) {
         var numberOfDaysToSub = 7;
         $scope.today = new Date();
         $scope.badData = false;
         $scope.today.setDate($scope.today.getDate() - numberOfDaysToSub);
 
-        $http.get("https://api.github.com/repos/angular/angular.js/issues?since=" + $scope.today)
-            .then(function (response) {
-                $scope.issues = response.data;
-            }, function (response) {
-                $scope.badData = true;
-            });
-        });
+        $scope.page = 1;
+
+        $scope.nextPage = function () {
+            $scope.page = $scope.page + 1;
+            $scope.loadData();
+            $window.scrollTo(0, 0);
+        }
+
+        $scope.prevPage = function () {
+            if ($scope.page > 1) {
+                $scope.page = $scope.page - 1;
+                $scope.loadData();
+                $window.scrollTo(0, 0);
+            }
+        }
+
+        $scope.newPage = function () {
+            if ($scope.page >= 1) {
+                $scope.page = $scope.newPageNumber;
+                $scope.loadData();
+                $window.scrollTo(0, 0);
+            }
+        }
+
+        $scope.loadData = function () {
+            $http.get("https://api.github.com/repos/angular/angular/issues?since=" + $scope.today + "&page=" + $scope.page)
+                .then(function (response) {
+                    $scope.issues = response.data;
+                }, function (response) {
+                    $scope.badData = true;
+                });
+        };
+        $scope.loadData();
+    });
 </script>
 </body>
 </html>
