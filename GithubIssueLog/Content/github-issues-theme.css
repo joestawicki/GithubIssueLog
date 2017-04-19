@@ -1,0 +1,33 @@
+﻿html, body {
+    font-family: sans-serif;
+    height: 100%;
+    width: 100%;
+}
+
+table {
+    width: 90%;
+    border-collapse: collapse;
+}
+
+td, th {
+    text-align: center;
+    border: 1px solid #808080;
+    padding: 5px;
+    min-width: 20px;
+}
+
+th {
+    background-color: lightblue;
+}
+
+td {
+    font-size: small;
+}
+
+tr:nth-child(even) {
+    background-color: lightgrey;
+}
+
+tr:hover{
+    background-color: #fff1f1;
+}

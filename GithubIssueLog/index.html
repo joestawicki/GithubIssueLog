@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link href="Content/github-issues-theme.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <title>Github API Demo</title>
+</head>
+<body>
+    <div ng-app="githubApp" ng-controller="githubIssuesController">
+        <table>
+            <tr>
+                <th ng-click="orderByField='issues.title'; reverseSort = !reverseSort">Title</th>
+                <th>Body</th>
+                <th>User Login</th>
+                <th>Assignee Login</th>
+            </tr>
+            <tr ng-hide="badData" ng-repeat="x in issues">
+                <td>{{x.title}}</td>
+                <td>{{x.body}}</td>
+                <td>{{x.user.login}}</td>
+                <td>{{x.assignee.login}}</td>
+            </tr>
+            <tr ng-show="badData">
+                <td colspan="4">Unable to retrieve data, please try again.</td>
+            </tr>
+        </table>
+    </div>
+<script>
+    var app = angular.module('githubApp', []);
+    app.controller('githubIssuesController', function ($scope, $http) {
+        $scope.badData = false;
+
+            $http.get("https://api.github.com/repos/angular/angular.js/issues")
+                .then(function (response) {
+                    $scope.issues = response.data;
+                }, function (response) {
+                    $scope.badData = true;
+                });
+        });
+</script>
+</body>
+</html>
