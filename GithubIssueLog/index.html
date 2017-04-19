@@ -57,7 +57,7 @@
         }
 
         $scope.newPage = function () {
-            if ($scope.page >= 1) {
+            if ($scope.newPageNumber >= 1) {
                 $scope.page = $scope.newPageNumber;
                 $scope.loadData();
                 $window.scrollTo(0, 0);
